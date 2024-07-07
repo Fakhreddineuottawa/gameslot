@@ -83,13 +83,13 @@ const Checkout = () => (
 // NewsSection Component
 const NewsSection = () => (
     <section className="news-section">
-        <h2>Actualités Du "Gaming" Au Monde</h2>
-        <p>Êtes-vous intéressé par les nouveautés du Gaming? Vous êtes au bon endroit.</p>
+        <h2>Actualit&eacute;s Du "Gaming" Au Monde</h2>
+        <p>&Ecirc;tes-vous int&eacute;ress&eacute; par les nouveaut&eacute;s du Gaming? Vous &ecirc;tes au bon endroit.</p>
         <div className="news-item">
             <img src="path/to/image.jpg" alt="News" className="news-image" />
             <div className="news-content">
                 <h3>Nouveaux jeux</h3>
-                <p>Infinity met à votre disposition ces trois jeux.</p>
+                <p>Infinity met &agrave; votre disposition ces trois jeux.</p>
                 <ul>
                     <li>Fifa 2023</li>
                     <li>God Of War Ragnarok</li>
@@ -104,7 +104,7 @@ const NewsSection = () => (
 const ContactSection = () => (
     <footer className="contact-section">
         <h2>Contact</h2>
-        <p>Téléphone: +1(123)-4567-9101</p>
+        <p>T&eacute;l&eacute;phone: +1(123)-4567-9101</p>
         <p>Email: e-gaming@infinity.com</p>
         <p>Adresse: 52 infinity street, Ottawa, Canada L5K 4S9</p>
     </footer>
@@ -117,7 +117,7 @@ const PromotionsSection = ({ games }) => {
     return (
         <section className="promotions-section">
             <h2>Promotions</h2>
-            <p>Découvrez nos jeux gratuits ou à prix réduit !</p>
+            <p>D&eacute;couvrez nos jeux gratuits ou &agrave; prix r&eacute;duit !</p>
             <div className="promotions-list">
                 {promotions.map(game => (
                     <div key={game.id} className="promotion-card">
@@ -126,7 +126,7 @@ const PromotionsSection = ({ games }) => {
                         {game.price === 0 ? (
                             <p className="free">Gratuit</p>
                         ) : (
-                            <p className="discount">Prix réduit: ${game.price} (Économisez ${game.discount})</p>
+                            <p className="discount">Prix r&eacute;duit: ${game.discount} (Economisez ${game.price - game.discount})</p>
                         )}
                         <button className="buy-button">Buy</button>
                     </div>
@@ -149,10 +149,10 @@ const Home = ({ games, articles }) => (
 // Main App Component
 const App = () => {
     const games = [
-        { id: '1', title: 'Game 1', price: 30, discount: 0, image: 'path/to/image1.jpg', description: 'Description of Game 1' },
-        { id: '2', title: 'Game 2', price: 40, discount: 10, image: 'path/to/image2.jpg', description: 'Description of Game 2' },
-        { id: '3', title: 'Game 3', price: 50, discount: 20, image: 'path/to/image3.jpg', description: 'Description of Game 3' },
-        { id: '4', title: 'Game 4', price: 0, discount: 0, image: 'path/to/image4.jpg', description: 'Description of Game 4' },
+        { id: '1', title: 'Game 1', price: 30, image: 'path/to/image1.jpg', description: 'Description of Game 1', discount: 10 },
+        { id: '2', title: 'Game 2', price: 40, image: 'path/to/image2.jpg', description: 'Description of Game 2', discount: 0 },
+        { id: '3', title: 'Game 3', price: 50, image: 'path/to/image3.jpg', description: 'Description of Game 3', discount: 20 },
+        { id: '4', title: 'Game 4', price: 0, image: 'path/to/image4.jpg', description: 'Description of Game 4', discount: 0 },
     ];
 
     const articles = [
