@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/gameslot/static/css/main.4cbc5823.css",
-    "main.js": "/gameslot/static/js/main.c7581a8b.js",
+    "main.js": "/gameslot/static/js/main.c02d4ffa.js",
     "index.html": "/gameslot/index.html",
     "main.4cbc5823.css.map": "/gameslot/static/css/main.4cbc5823.css.map",
-    "main.c7581a8b.js.map": "/gameslot/static/js/main.c7581a8b.js.map"
+    "main.c02d4ffa.js.map": "/gameslot/static/js/main.c02d4ffa.js.map"
   },
   "entrypoints": [
     "static/css/main.4cbc5823.css",
-    "static/js/main.c7581a8b.js"
+    "static/js/main.c02d4ffa.js"
   ]
 }
