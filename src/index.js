@@ -277,7 +277,7 @@ const App = () => {
     };
 
     return (
-        <Router basename="/<repository-name>">
+        <Router basename="/gameslot">
             <Header />
             <SearchBar onSearch={handleSearch} />
             <Routes>
