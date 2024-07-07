@@ -84,7 +84,7 @@ const Checkout = () => (
 const NewsSection = () => (
     <section className="news-section">
         <h2>Actualités Du "Gaming" Au Monde</h2>
-        <p>Êtes vous intéressé par les nouveautés du Gaming? Vous êtes au bon endroit.</p>
+        <p>Êtes-vous intéressé par les nouveautés du Gaming? Vous êtes au bon endroit.</p>
         <div className="news-item">
             <img src="path/to/image.jpg" alt="News" className="news-image" />
             <div className="news-content">
@@ -110,10 +110,37 @@ const ContactSection = () => (
     </footer>
 );
 
+// PromotionsSection Component
+const PromotionsSection = ({ games }) => {
+    const promotions = games.filter(game => game.price === 0 || game.discount > 0);
+
+    return (
+        <section className="promotions-section">
+            <h2>Promotions</h2>
+            <p>Découvrez nos jeux gratuits ou à prix réduit !</p>
+            <div className="promotions-list">
+                {promotions.map(game => (
+                    <div key={game.id} className="promotion-card">
+                        <img src={game.image} alt={game.title} className="promotion-image" />
+                        <h3>{game.title}</h3>
+                        {game.price === 0 ? (
+                            <p className="free">Gratuit</p>
+                        ) : (
+                            <p className="discount">Prix réduit: ${game.price} (Économisez ${game.discount})</p>
+                        )}
+                        <button className="buy-button">Buy</button>
+                    </div>
+                ))}
+            </div>
+        </section>
+    );
+};
+
 // Home Component
 const Home = ({ games, articles }) => (
     <div>
         <GameList games={games} />
+        <PromotionsSection games={games} />
         <NewsSection />
         <ContactSection />
     </div>
@@ -122,9 +149,10 @@ const Home = ({ games, articles }) => (
 // Main App Component
 const App = () => {
     const games = [
-        { id: '1', title: 'Game 1', price: 30, image: 'path/to/image1.jpg', description: 'Description of Game 1' },
-        { id: '2', title: 'Game 2', price: 40, image: 'path/to/image2.jpg', description: 'Description of Game 2' },
-        { id: '3', title: 'Game 3', price: 50, image: 'path/to/image3.jpg', description: 'Description of Game 3' },
+        { id: '1', title: 'Game 1', price: 30, discount: 0, image: 'path/to/image1.jpg', description: 'Description of Game 1' },
+        { id: '2', title: 'Game 2', price: 40, discount: 10, image: 'path/to/image2.jpg', description: 'Description of Game 2' },
+        { id: '3', title: 'Game 3', price: 50, discount: 20, image: 'path/to/image3.jpg', description: 'Description of Game 3' },
+        { id: '4', title: 'Game 4', price: 0, discount: 0, image: 'path/to/image4.jpg', description: 'Description of Game 4' },
     ];
 
     const articles = [
