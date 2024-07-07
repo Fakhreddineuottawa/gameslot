@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import './style.css';
 
-// Header 
+// Header Component
 const Header = () => (
     <header className="header">
         <h1>GameSlot</h1>
@@ -15,78 +15,78 @@ const Header = () => (
     </header>
 );
 
-// SearchBar 
+// SearchBar Component
 const SearchBar = ({ onSearch }) => (
     <input type="text" placeholder="Search for games and articles by title" onChange={onSearch} className="search-bar" />
 );
 
-// GameCard 
+// GameCard Component
 const GameCard = ({ game }) => (
     <div className="game-card">
-        <img src={game.image} alt={game.title} />
+        <img src={game.image} alt={game.title} className="game-image" />
         <h2>{game.title}</h2>
         <p>Price: ${game.price}</p>
-        <Link to={`/game/${game.id}`}>Related articles</Link>
-        <button>Buy</button>
+        <Link to={`/game/${game.id}`} className="related-articles">Related articles</Link>
+        <button className="buy-button">Buy</button>
     </div>
 );
 
-// GameList 
+// GameList Component
 const GameList = ({ games }) => (
     <div className="game-list">
         {games.map(game => <GameCard key={game.id} game={game} />)}
     </div>
 );
 
-// GameDetail 
+// GameDetail Component
 const GameDetail = ({ games }) => {
     const { id } = useParams();
     const game = games.find(game => game.id === id);
 
     return (
-        <div>
+        <div className="game-detail">
             <h2>{game.title}</h2>
-            <img src={game.image} alt={game.title} />
+            <img src={game.image} alt={game.title} className="game-detail-image" />
             <p>{game.description}</p>
             <p>Price: ${game.price}</p>
-            <button>Buy</button>
+            <button className="buy-button">Buy</button>
         </div>
     );
 };
 
-// ArticleDetail 
+// ArticleDetail Component
 const ArticleDetail = ({ articles }) => {
     const { id } = useParams();
     const article = articles.find(article => article.id === id);
 
     return (
-        <div>
+        <div className="article-detail">
             <h2>{article.title}</h2>
             <p>{article.content}</p>
         </div>
     );
 };
 
-// Checkout 
+// Checkout Component
 const Checkout = () => (
-    <div>
+    <div className="checkout">
         <h1>Checkout</h1>
         <div>
             <p>Original Price: $XXX</p>
             <p>Discount: $XX</p>
             <p>Final Price: $XXX</p>
         </div>
-        <button>Next</button>
+        <button className="next-button">Next</button>
     </div>
 );
 
-// NewsSection 
+// NewsSection Component
 const NewsSection = () => (
     <section className="news-section">
         <h2>Actualités Du "Gaming" Au Monde</h2>
         <p>Êtes vous intéressé par les nouveautés du Gaming? Vous êtes au bon endroit.</p>
         <div className="news-item">
-            <img src="path/to/image.jpg" alt="News" />
+            <img src="path/to/image.jpg" alt="News" className="news-image" />
             <div className="news-content">
                 <h3>Nouveaux jeux</h3>
                 <p>Infinity met à votre disposition ces trois jeux.</p>
@@ -100,7 +100,7 @@ const NewsSection = () => (
     </section>
 );
 
-// ContactSection 
+// ContactSection Component
 const ContactSection = () => (
     <footer className="contact-section">
         <h2>Contact</h2>
@@ -110,7 +110,7 @@ const ContactSection = () => (
     </footer>
 );
 
-// Home 
+// Home Component
 const Home = ({ games, articles }) => (
     <div>
         <GameList games={games} />
@@ -119,7 +119,7 @@ const Home = ({ games, articles }) => (
     </div>
 );
 
-// Main App
+// Main App Component
 const App = () => {
     const games = [
         { id: '1', title: 'Game 1', price: 30, image: 'path/to/image1.jpg', description: 'Description of Game 1' },
