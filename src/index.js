@@ -97,26 +97,16 @@ const CommentSection = ({ comments, onAddComment }) => {
 };
 
 // GameDetail Component
-const GameDetail = ({ games, onAddComment }) => {
-    const { id } = useParams();
-    const game = games.find(game => game.id === id);
-    const [comments, setComments] = useState([]);
-
-    const handleAddComment = (comment) => {
-        setComments([...comments, comment]);
-    };
-
-    return (
-        <div className="game-detail">
-            <h2>{game.title}</h2>
-            <img src={game.image} alt={game.title} className="game-detail-image" />
-            <p>{game.description}</p>
-            <p>Price: ${game.price}</p>
-            <button className="buy-button">Buy</button>
-            <CommentSection comments={comments} onAddComment={handleAddComment} />
-        </div>
-    );
-};
+const GameDetail = ({ game, comments, onAddComment }) => (
+    <div className="game-detail">
+        <h2>{game.title}</h2>
+        <img src={game.image} alt={game.title} className="game-detail-image" />
+        <p>{game.description}</p>
+        <p>Price: ${game.price}</p>
+        <button className="buy-button">Buy</button>
+        <CommentSection comments={comments} onAddComment={onAddComment} />
+    </div>
+);
 
 // ArticleDetail Component
 const ArticleDetail = ({ articles }) => {
@@ -243,6 +233,7 @@ const Home = ({ games, articles, onBuy }) => (
 // Main App Component
 const App = () => {
     const [selectedGame, setSelectedGame] = useState(null);
+    const [comments, setComments] = useState({});
     const [checkoutStep, setCheckoutStep] = useState(1);
     const navigate = useNavigate();
 
@@ -278,13 +269,29 @@ const App = () => {
         navigate('/');
     };
 
+    const handleAddComment = (gameId, comment) => {
+        setComments((prevComments) => ({
+            ...prevComments,
+            [gameId]: [...(prevComments[gameId] || []), comment],
+        }));
+    };
+
     return (
         <Router>
             <Header />
             <SearchBar onSearch={handleSearch} />
             <Routes>
                 <Route path="/" element={<Home games={games} articles={articles} onBuy={handleBuy} />} />
-                <Route path="/game/:id" element={<GameDetail games={games} onAddComment={handleAddComment} />} />
+                <Route
+                    path="/game/:id"
+                    element={
+                        <GameDetail
+                            game={games.find((game) => game.id === selectedGame?.id)}
+                            comments={comments[selectedGame?.id] || []}
+                            onAddComment={(comment) => handleAddComment(selectedGame?.id, comment)}
+                        />
+                    }
+                />
                 <Route path="/article/:id" element={<ArticleDetail articles={articles} />} />
                 <Route
                     path="/checkout"
