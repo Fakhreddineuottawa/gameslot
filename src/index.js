@@ -277,7 +277,7 @@ const App = () => {
     };
 
     return (
-        <Router>
+        <Router basename="/<repository-name>">
             <Header />
             <SearchBar onSearch={handleSearch} />
             <Routes>
