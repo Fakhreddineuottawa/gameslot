@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Header.css';
 
 const Header = () => (
-    <header>
+    <header className="header">
         <h1>GameSlot</h1>
         <nav>
             <Link to="/">Home</Link>
