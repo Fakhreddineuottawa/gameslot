@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import './style.css';
 
 // Header Component
@@ -20,21 +20,45 @@ const SearchBar = ({ onSearch }) => (
     <input type="text" placeholder="Search for games and articles by title" onChange={onSearch} className="search-bar" />
 );
 
+// FacetedSearch Component
+const FacetedSearch = ({ filters, onFilterChange }) => (
+    <div className="faceted-search">
+        <h3>Recherche par facette</h3>
+        {filters.map((filter, index) => (
+            <div key={index} className="filter-category">
+                <h4>{filter.name}</h4>
+                {filter.options.map((option, idx) => (
+                    <div key={idx}>
+                        <input
+                            type="checkbox"
+                            id={`${filter.name}-${option}`}
+                            name={filter.name}
+                            value={option}
+                            onChange={onFilterChange}
+                        />
+                        <label htmlFor={`${filter.name}-${option}`}>{option}</label>
+                    </div>
+                ))}
+            </div>
+        ))}
+    </div>
+);
+
 // GameCard Component
-const GameCard = ({ game }) => (
+const GameCard = ({ game, onBuy }) => (
     <div className="game-card">
         <img src={game.image} alt={game.title} className="game-image" />
         <h2>{game.title}</h2>
         <p>Price: ${game.price}</p>
         <Link to={`/game/${game.id}`} className="related-articles">Related articles</Link>
-        <button className="buy-button">Buy</button>
+        <button className="buy-button" onClick={() => onBuy(game)}>Buy</button>
     </div>
 );
 
 // GameList Component
-const GameList = ({ games }) => (
+const GameList = ({ games, onBuy }) => (
     <div className="game-list">
-        {games.map(game => <GameCard key={game.id} game={game} />)}
+        {games.map(game => <GameCard key={game.id} game={game} onBuy={onBuy} />)}
     </div>
 );
 
@@ -67,16 +91,39 @@ const ArticleDetail = ({ articles }) => {
     );
 };
 
-// Checkout Component
-const Checkout = () => (
+// Checkout Components
+const CheckoutStep1 = ({ game, onNext }) => (
     <div className="checkout">
-        <h1>Checkout</h1>
+        <h2>1. Game</h2>
         <div>
-            <p>Original Price: $XXX</p>
-            <p>Discount: $XX</p>
-            <p>Final Price: $XXX</p>
+            <p>Title: {game.title}</p>
+            <p>Original Price: ${game.price}</p>
+            <p>Discount: ${game.discount}</p>
+            <p>Final Price: ${game.price - game.discount}</p>
         </div>
-        <button className="next-button">Next</button>
+        <button className="next-button" onClick={onNext}>Next</button>
+    </div>
+);
+
+const CheckoutStep2 = ({ onNext }) => (
+    <div className="checkout">
+        <h2>2. Credit Card</h2>
+        <div>
+            <p>Enter your credit card details:</p>
+            <input type="text" placeholder="Card Number" />
+            <input type="text" placeholder="Name on Card" />
+            <input type="text" placeholder="Expiry Date" />
+            <input type="text" placeholder="CVV" />
+        </div>
+        <button className="next-button" onClick={onNext}>Next</button>
+    </div>
+);
+
+const CheckoutStep3 = ({ onConfirm }) => (
+    <div className="checkout">
+        <h2>3. Confirmation</h2>
+        <p>Review your details and confirm your purchase.</p>
+        <button className="confirm-button" onClick={onConfirm}>Confirm</button>
     </div>
 );
 
@@ -137,9 +184,16 @@ const PromotionsSection = ({ games }) => {
 };
 
 // Home Component
-const Home = ({ games, articles }) => (
+const Home = ({ games, articles, onBuy }) => (
     <div>
-        <GameList games={games} />
+        <FacetedSearch
+            filters={[
+                { name: 'Price', options: ['Free', 'Under $20', 'Under $50', 'Above $50'] },
+                { name: 'Genre', options: ['Action', 'Adventure', 'RPG', 'Simulation', 'Strategy'] },
+            ]}
+            onFilterChange={(e) => console.log(e.target.value)}
+        />
+        <GameList games={games} onBuy={onBuy} />
         <PromotionsSection games={games} />
         <NewsSection />
         <ContactSection />
@@ -148,6 +202,10 @@ const Home = ({ games, articles }) => (
 
 // Main App Component
 const App = () => {
+    const [selectedGame, setSelectedGame] = useState(null);
+    const [checkoutStep, setCheckoutStep] = useState(1);
+    const navigate = useNavigate();
+
     const games = [
         { id: '1', title: 'Game 1', price: 30, image: 'path/to/image1.jpg', description: 'Description of Game 1', discount: 10 },
         { id: '2', title: 'Game 2', price: 40, image: 'path/to/image2.jpg', description: 'Description of Game 2', discount: 0 },
@@ -165,15 +223,41 @@ const App = () => {
         console.log(e.target.value);
     };
 
+    const handleBuy = (game) => {
+        setSelectedGame(game);
+        setCheckoutStep(1);
+        navigate('/checkout');
+    };
+
+    const handleNextStep = () => {
+        setCheckoutStep(checkoutStep + 1);
+    };
+
+    const handleConfirm = () => {
+        alert('Purchase confirmed!');
+        navigate('/');
+    };
+
     return (
         <Router>
             <Header />
             <SearchBar onSearch={handleSearch} />
             <Routes>
-                <Route path="/" element={<Home games={games} articles={articles} />} />
+                <Route path="/" element={<Home games={games} articles={articles} onBuy={handleBuy} />} />
                 <Route path="/game/:id" element={<GameDetail games={games} />} />
                 <Route path="/article/:id" element={<ArticleDetail articles={articles} />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                    path="/checkout"
+                    element={
+                        checkoutStep === 1 ? (
+                            <CheckoutStep1 game={selectedGame} onNext={handleNextStep} />
+                        ) : checkoutStep === 2 ? (
+                            <CheckoutStep2 onNext={handleNextStep} />
+                        ) : (
+                            <CheckoutStep3 onConfirm={handleConfirm} />
+                        )
+                    }
+                />
             </Routes>
         </Router>
     );
