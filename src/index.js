@@ -62,10 +62,49 @@ const GameList = ({ games, onBuy }) => (
     </div>
 );
 
+// CommentSection Component
+const CommentSection = ({ comments, onAddComment }) => {
+    const [newComment, setNewComment] = useState('');
+
+    const handleAddComment = () => {
+        if (newComment.trim()) {
+            onAddComment(newComment);
+            setNewComment('');
+        }
+    };
+
+    return (
+        <div className="comment-section">
+            <h3>Comments</h3>
+            <div className="comments-list">
+                {comments.map((comment, index) => (
+                    <div key={index} className="comment">
+                        <p>{comment}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="comment-form">
+                <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment"
+                    rows="3"
+                />
+                <button onClick={handleAddComment}>Submit</button>
+            </div>
+        </div>
+    );
+};
+
 // GameDetail Component
-const GameDetail = ({ games }) => {
+const GameDetail = ({ games, onAddComment }) => {
     const { id } = useParams();
     const game = games.find(game => game.id === id);
+    const [comments, setComments] = useState([]);
+
+    const handleAddComment = (comment) => {
+        setComments([...comments, comment]);
+    };
 
     return (
         <div className="game-detail">
@@ -74,6 +113,7 @@ const GameDetail = ({ games }) => {
             <p>{game.description}</p>
             <p>Price: ${game.price}</p>
             <button className="buy-button">Buy</button>
+            <CommentSection comments={comments} onAddComment={handleAddComment} />
         </div>
     );
 };
@@ -244,7 +284,7 @@ const App = () => {
             <SearchBar onSearch={handleSearch} />
             <Routes>
                 <Route path="/" element={<Home games={games} articles={articles} onBuy={handleBuy} />} />
-                <Route path="/game/:id" element={<GameDetail games={games} />} />
+                <Route path="/game/:id" element={<GameDetail games={games} onAddComment={handleAddComment} />} />
                 <Route path="/article/:id" element={<ArticleDetail articles={articles} />} />
                 <Route
                     path="/checkout"
